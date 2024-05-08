@@ -37,10 +37,10 @@ class productController extends Controller
         // $idproduct = Product::where('idproduct','=','super')->get(); just as test im sure it works
 
 
-        $idproduct = $request->query('idproduct'); // Extract idproduct from the query parameters
+        $idproduct = $request->query('product_id'); // Extract idproduct from the query parameters
 
 
-        $product = Product::where('idproduct', $idproduct)->first();
+        $product = Product::where('product_id', $idproduct)->first();
 
         if (!$product) {
             return 'no id found';
@@ -59,14 +59,14 @@ class productController extends Controller
      */
     public function update(Request $request)
     {
-    $idproduct = $request->input('idproduct'); // Extract idproduct from the request data
+    $idproduct = $request->input('product_id'); // Extract idproduct from the request data
 
     $data = $request->validate([
         'name' => 'required',
         'price' => 'required'
     ]);
 
-    $product = Product::where('idproduct', $idproduct)->first();
+    $product = Product::where('product_id', $idproduct)->first();
 
     // updating based on multiple filters
 
@@ -87,10 +87,10 @@ class productController extends Controller
      */
     public function destroy(Request $request)
     {
-    $idproduct = $request->query('idproduct'); // Extract idproduct from the query parameters
+    $idproduct = $request->query('product_id'); // Extract idproduct from the query parameters
     // $price = $request->query('price'); // Extract price from the query parameters
 
-    $product = Product::where('idproduct', $idproduct)
+    $product = Product::where('product_id', $idproduct)
                        // ->where('price', $price)
                        ->first();
 

@@ -6,16 +6,16 @@ use Exception;
 use Illuminate\Database\QueryException;
 use Illuminate\Support\Facades\DB;
 
-class products_module
+class products_with_raw_sql
 {
+
 
     function new_product($request)
     {
         try {
             DB::beginTransaction();
-            DB::table('products')->insert(
-                ['name' => $request->name, 'price' => $request->price]
-            );
+            DB::insert("INSERT INTO `products` (`name`, `price`) VALUES(?,?)",
+                [$request->name,$request->price]);
             DB::commit();
             return true;
         } catch (Exception $e) {
@@ -28,9 +28,8 @@ class products_module
     {
         try {
             DB::beginTransaction();
-            DB::table('products')->where('product_id', '=', $request->id)->update(
-                ['name' => $request->name, 'price' => $request->price]
-            );
+            DB::update("UPDATE `products` SET `name` = ?, `price` = ? WHERE `product_id` =?",
+                [$request->name,$request->price,$request->id]);
             DB::commit();
             return true;
         } catch (Exception $e) {
@@ -43,7 +42,7 @@ class products_module
     {
         try {
             DB::beginTransaction();
-            DB::table('products')->where('product_id', '=', $request->id)->delete();
+            DB::delete("DELETE FROM `products` where `product_id`=? ",[$request->id]);
             DB::commit();
             return true;
         } catch (Exception $e) {
@@ -55,19 +54,18 @@ class products_module
     function select_product($request)
     {
         try {
-            DB::beginTransaction();
-            $product = DB::table('products')
-                ->where('product_id', '=', $request->id)
-                ->select('name', 'product_id', 'price')
-                ->first(); // Assuming you want only the first matching product
+            $product = DB::select("select `name`, `product_id`, `price` from `products`
+                             where `product_id`=? ",[$request->id]);
 
-            return $product;
+            return $product[0];
         } catch (Exception $e) {
             DB::rollBack();
             throw new Exception($e->getMessage());
         }
     }
 
+    #this one is fine like this..
+    #other methods are exclusive
     function get_product_table($request)
     {
         try {

@@ -14,7 +14,7 @@ class product extends Model
     //to disable timestamps
 
     public $timestamps = false;
-    protected $primaryKey = 'idproduct';
+    protected $primaryKey = 'product_id';
 
     protected $fillable = [
         'name',
